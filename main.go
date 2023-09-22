@@ -3,6 +3,8 @@ package main
 import (
 	"geulSsi/config"
 	"geulSsi/config/db"
+	"geulSsi/router"
+	"geulSsi/validator"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,4 +22,6 @@ func Init(app *gin.Engine) {
 
 	// db
 	db.InitMySQL(&toml)
+	router.MainRouter(app, &toml)
+	validator.InitValidate()
 }
