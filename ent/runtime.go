@@ -3,6 +3,8 @@
 package ent
 
 import (
+	"geulSsi/ent/event"
+	"geulSsi/ent/heart"
 	"geulSsi/ent/schema"
 	"geulSsi/ent/user"
 	"time"
@@ -12,6 +14,28 @@ import (
 // (default values, validators, hooks and policies) and stitches it
 // to their package variables.
 func init() {
+	eventFields := schema.Event{}.Fields()
+	_ = eventFields
+	// eventDescCreatedAt is the schema descriptor for created_at field.
+	eventDescCreatedAt := eventFields[2].Descriptor()
+	// event.DefaultCreatedAt holds the default value on creation for the created_at field.
+	event.DefaultCreatedAt = eventDescCreatedAt.Default.(func() time.Time)
+	// eventDescUpdatedAt is the schema descriptor for updated_at field.
+	eventDescUpdatedAt := eventFields[3].Descriptor()
+	// event.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	event.DefaultUpdatedAt = eventDescUpdatedAt.Default.(func() time.Time)
+	// event.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	event.UpdateDefaultUpdatedAt = eventDescUpdatedAt.UpdateDefault.(func() time.Time)
+	heartFields := schema.Heart{}.Fields()
+	_ = heartFields
+	// heartDescIsHeart is the schema descriptor for is_heart field.
+	heartDescIsHeart := heartFields[2].Descriptor()
+	// heart.DefaultIsHeart holds the default value on creation for the is_heart field.
+	heart.DefaultIsHeart = heartDescIsHeart.Default.(bool)
+	// heartDescCreatedAt is the schema descriptor for created_at field.
+	heartDescCreatedAt := heartFields[3].Descriptor()
+	// heart.DefaultCreatedAt holds the default value on creation for the created_at field.
+	heart.DefaultCreatedAt = heartDescCreatedAt.Default.(func() time.Time)
 	userFields := schema.User{}.Fields()
 	_ = userFields
 	// userDescCreatedAt is the schema descriptor for created_at field.
