@@ -56,13 +56,20 @@ func (c eventControllerImpl) CreateEvent(g *gin.Context) {
 		g.JSON(http.StatusForbidden, "10초 후에 이벤트를 생성할 수 있습니다.")
 		return
 	}
+	ctx := g.Request.Context()
+
+	res, customErr := c.eventService.CreateEvent(ctx, &event)
+	if customErr != nil {
+		g.JSON(customErr.StatusCode, customErr)
+		return
+	}
 
 	go func() {
 		c.eventChannel <- event
 	}()
 
 	// 이벤트 생성 완료 메시지 반환
-	g.JSON(http.StatusOK, gin.H{"message": "이벤트가 생성되었습니다."})
+	g.JSON(http.StatusOK, res)
 	return
 }
 
