@@ -1,0 +1,30 @@
+version: '3.7'
+services:
+  db:
+    image: mysql:8.0.31
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: sample
+      MYSQL_USER: sample
+      MYSQL_PASSWORD: 1234
+    ports:
+      - "3306:3306"
+
+    command: ['mysqld']
+
+  redis:
+    image: redis
+    restart: always
+    environment:
+      REDIS_PASSWORD: "1234"
+    ports:
+      - "6379:6379"
+
+  mongodb:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 1234
+    ports:
+      - "27017:27017"
