@@ -15,7 +15,51 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/users": {
+        "/users": {
+            "put": {
+                "description": "회원가입 시 발급된 SecretCode와 Nickname을 통해 비밀번호를 변경합니다. SecretCode가 없다면 비밀번호를 변경할 수 없습니다.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "SecretCode로 비밀번호 변경",
+                "parameters": [
+                    {
+                        "description": "비밀번호 변경 요청 객체",
+                        "name": "userDto.ChangePasswordRequest",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/user.ChangePasswordRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/custom.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/custom.Fail400GetResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/custom.Fail500GetResponse"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "회원가입을 하면 SecretCode를 발급합니다. SecretCode로 비밀번호 변경이나 회원 찾기에 사용되나 재발급은 되지 않으니 보관 안내가 필요합니다.",
                 "consumes": [
@@ -94,6 +138,45 @@ const docTemplate = `{
                 "status_code": {
                     "type": "integer",
                     "example": 500
+                }
+            }
+        },
+        "custom.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "message": {
+                    "type": "string",
+                    "example": "success"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        },
+        "user.ChangePasswordRequest": {
+            "type": "object",
+            "required": [
+                "nickname",
+                "password",
+                "secretCode"
+            ],
+            "properties": {
+                "nickname": {
+                    "type": "string",
+                    "example": "nickname"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "password"
+                },
+                "secretCode": {
+                    "type": "string",
+                    "example": "uuid"
                 }
             }
         },

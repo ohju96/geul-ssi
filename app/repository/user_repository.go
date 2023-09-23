@@ -7,15 +7,32 @@ import (
 )
 
 type UserRepository interface {
-	CreateUser(ctx context.Context, req *ent.User, tx *ent.Tx) (*ent.User, error) // 생성
-	FindByUserNickname(ctx context.Context, req *ent.User) (*ent.User, error)     // 닉네임으로 조회
-	FindBySecretCode(ctx context.Context, req *ent.User) (*ent.User, error)       // 시크릿코드로 조회
-	ExistByUserNickname(ctx context.Context, req *ent.User) (bool, error)         // 닉네임으로 존재여부
-	ExistBySecretCode(ctx context.Context, req *ent.User) (bool, error)           // 시크릿코드로 존재여부
+	CreateUser(ctx context.Context, req *ent.User, tx *ent.Tx) (*ent.User, error)               // 생성
+	FindByUserNickname(ctx context.Context, req *ent.User) (*ent.User, error)                   // 닉네임으로 조회
+	FindBySecretCode(ctx context.Context, req *ent.User) (*ent.User, error)                     // 시크릿코드로 조회
+	ExistByUserNickname(ctx context.Context, req *ent.User) (bool, error)                       // 닉네임으로 존재여부
+	ExistBySecretCode(ctx context.Context, req *ent.User) (bool, error)                         // 시크릿코드로 존재여부
+	ExistBySecretCodeAndNickname(ctx context.Context, req *ent.User) (bool, error)              // 시크릿코드와 닉네임으로 존재여부
+	UpdatePasswordByNicknameAndSecretCode(ctx context.Context, req *ent.User, tx *ent.Tx) error // 시크릿코드와 닉네임으로 비밀번호 변경
 }
 
 type userRepositoryImpl struct {
 	ent.Client
+}
+
+func (r userRepositoryImpl) UpdatePasswordByNicknameAndSecretCode(ctx context.Context, req *ent.User, tx *ent.Tx) error {
+	return tx.User.Update().
+		Where(user.NicknameEQ(req.Nickname),
+			user.SecretCodeEQ(req.SecretCode)).
+		SetPassword(req.Password).
+		Exec(ctx)
+}
+
+func (r userRepositoryImpl) ExistBySecretCodeAndNickname(ctx context.Context, req *ent.User) (bool, error) {
+	return r.User.Query().
+		Where(user.NicknameEQ(req.Nickname),
+			user.SecretCodeEQ(req.SecretCode)).
+		Exist(ctx)
 }
 
 func (r userRepositoryImpl) ExistByUserNickname(ctx context.Context, req *ent.User) (bool, error) {

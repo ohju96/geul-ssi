@@ -2,7 +2,13 @@ package user
 
 import "geulSsi/app/dto/custom"
 
-type CreateUserRequest struct {
+type ChangePasswordRequest struct { // 비밀번호 변경
+	Nickname   string `json:"nickname" validate:"required" example:"nickname"`
+	Password   string `json:"password" validate:"required" example:"password"`
+	SecretCode string `json:"secretCode" validate:"required" example:"uuid"`
+}
+
+type CreateUserRequest struct { // 회원가입
 	Nickname string `json:"nickname" validate:"required" example:"nickname"`
 	Password string `json:"password" validate:"required" sample:"password"`
 }

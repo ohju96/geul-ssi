@@ -23,6 +23,34 @@ definitions:
         example: 500
         type: integer
     type: object
+  custom.Response:
+    properties:
+      code:
+        example: 1
+        type: integer
+      message:
+        example: success
+        type: string
+      status_code:
+        example: 200
+        type: integer
+    type: object
+  user.ChangePasswordRequest:
+    properties:
+      nickname:
+        example: nickname
+        type: string
+      password:
+        example: password
+        type: string
+      secretCode:
+        example: uuid
+        type: string
+    required:
+    - nickname
+    - password
+    - secretCode
+    type: object
   user.CreateUserPayload:
     properties:
       secretCode:
@@ -60,7 +88,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /api/v1/users:
+  /users:
     post:
       consumes:
       - application/json
@@ -89,6 +117,36 @@ paths:
           schema:
             $ref: '#/definitions/custom.Fail500GetResponse'
       summary: 회원가입
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: 회원가입 시 발급된 SecretCode와 Nickname을 통해 비밀번호를 변경합니다. SecretCode가 없다면
+        비밀번호를 변경할 수 없습니다.
+      parameters:
+      - description: 비밀번호 변경 요청 객체
+        in: body
+        name: userDto.ChangePasswordRequest
+        required: true
+        schema:
+          $ref: '#/definitions/user.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/custom.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/custom.Fail400GetResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/custom.Fail500GetResponse'
+      summary: SecretCode로 비밀번호 변경
       tags:
       - Users
 swagger: "2.0"

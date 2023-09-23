@@ -8,8 +8,8 @@ type Response struct {
 	Message    string `json:"message" example:"success"`
 }
 
-func NewSuccess() Response {
-	return Response{
+func NewSuccess() *Response {
+	return &Response{
 		StatusCode: http.StatusOK,
 		Code:       200,
 		Message:    "success",
