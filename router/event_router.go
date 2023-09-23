@@ -2,7 +2,10 @@ package router
 
 import (
 	"geulSsi/app/controller"
+	"geulSsi/app/repository"
+	"geulSsi/app/service"
 	"geulSsi/config"
+	"geulSsi/config/db"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,5 +19,9 @@ func InitEventRouter(g *gin.Engine, toml *config.Config) {
 }
 
 func eventDependency() controller.EventController {
-	return controller.NewEventController()
+	return controller.NewEventController(
+		service.NewEventService(
+			repository.NewEventRepository(*db.MySQL),
+		),
+	)
 }

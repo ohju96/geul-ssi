@@ -2,6 +2,7 @@ package controller
 
 import (
 	eventDto "geulSsi/app/dto/event"
+	"geulSsi/app/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -14,6 +15,7 @@ type EventController interface {
 
 type eventControllerImpl struct {
 	eventChannel chan eventDto.Event
+	eventService service.EventService
 }
 
 // CreateEvent godoc
@@ -42,7 +44,7 @@ func (c eventControllerImpl) CreateEvent(g *gin.Context) {
 	cookie, err := g.Request.Cookie("eventLimit")
 	if err != nil {
 		// 쿠키가 없으면 새로 생성하고 만료 시간 설정
-		expiration := time.Now().Add(10 * time.Second) // 예: 24시간
+		expiration := time.Now().Add(10 * time.Second) // 10초
 		cookie = &http.Cookie{
 			Name:    "eventLimit",
 			Value:   "created",
@@ -101,12 +103,13 @@ func (c eventControllerImpl) GetEvent(g *gin.Context) {
 	}
 }
 
-func NewEventController() EventController {
+func NewEventController(eventService service.EventService) EventController {
 
 	// 이벤트 데이터를 저장할 채널 생성
 	eventChannel := make(chan eventDto.Event, 2000) // 채널 버퍼 크기 조절 가능
 
 	return &eventControllerImpl{
+		eventService: eventService,
 		eventChannel: eventChannel,
 	}
 }

@@ -6,6 +6,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"geulSsi/ent/event"
+	"geulSsi/ent/heart"
 	"geulSsi/ent/user"
 	"reflect"
 	"sync"
@@ -73,7 +75,9 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			user.Table: user.ValidColumn,
+			event.Table: event.ValidColumn,
+			heart.Table: heart.ValidColumn,
+			user.Table:  user.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)
