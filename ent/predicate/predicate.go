@@ -14,3 +14,6 @@ type Heart func(*sql.Selector)
 
 // User is the predicate function for user builders.
 type User func(*sql.Selector)
+
+// WiseSaying is the predicate function for wisesaying builders.
+type WiseSaying func(*sql.Selector)

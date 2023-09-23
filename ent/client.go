@@ -14,6 +14,7 @@ import (
 	"geulSsi/ent/event"
 	"geulSsi/ent/heart"
 	"geulSsi/ent/user"
+	"geulSsi/ent/wisesaying"
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect"
@@ -31,6 +32,8 @@ type Client struct {
 	Heart *HeartClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// WiseSaying is the client for interacting with the WiseSaying builders.
+	WiseSaying *WiseSayingClient
 }
 
 // NewClient creates a new client configured with the given options.
@@ -47,6 +50,7 @@ func (c *Client) init() {
 	c.Event = NewEventClient(c.config)
 	c.Heart = NewHeartClient(c.config)
 	c.User = NewUserClient(c.config)
+	c.WiseSaying = NewWiseSayingClient(c.config)
 }
 
 type (
@@ -130,11 +134,12 @@ func (c *Client) Tx(ctx context.Context) (*Tx, error) {
 	cfg := c.config
 	cfg.driver = tx
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Event:  NewEventClient(cfg),
-		Heart:  NewHeartClient(cfg),
-		User:   NewUserClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		Event:      NewEventClient(cfg),
+		Heart:      NewHeartClient(cfg),
+		User:       NewUserClient(cfg),
+		WiseSaying: NewWiseSayingClient(cfg),
 	}, nil
 }
 
@@ -152,11 +157,12 @@ func (c *Client) BeginTx(ctx context.Context, opts *sql.TxOptions) (*Tx, error) 
 	cfg := c.config
 	cfg.driver = &txDriver{tx: tx, drv: c.driver}
 	return &Tx{
-		ctx:    ctx,
-		config: cfg,
-		Event:  NewEventClient(cfg),
-		Heart:  NewHeartClient(cfg),
-		User:   NewUserClient(cfg),
+		ctx:        ctx,
+		config:     cfg,
+		Event:      NewEventClient(cfg),
+		Heart:      NewHeartClient(cfg),
+		User:       NewUserClient(cfg),
+		WiseSaying: NewWiseSayingClient(cfg),
 	}, nil
 }
 
@@ -188,6 +194,7 @@ func (c *Client) Use(hooks ...Hook) {
 	c.Event.Use(hooks...)
 	c.Heart.Use(hooks...)
 	c.User.Use(hooks...)
+	c.WiseSaying.Use(hooks...)
 }
 
 // Intercept adds the query interceptors to all the entity clients.
@@ -196,6 +203,7 @@ func (c *Client) Intercept(interceptors ...Interceptor) {
 	c.Event.Intercept(interceptors...)
 	c.Heart.Intercept(interceptors...)
 	c.User.Intercept(interceptors...)
+	c.WiseSaying.Intercept(interceptors...)
 }
 
 // Mutate implements the ent.Mutator interface.
@@ -207,6 +215,8 @@ func (c *Client) Mutate(ctx context.Context, m Mutation) (Value, error) {
 		return c.Heart.mutate(ctx, m)
 	case *UserMutation:
 		return c.User.mutate(ctx, m)
+	case *WiseSayingMutation:
+		return c.WiseSaying.mutate(ctx, m)
 	default:
 		return nil, fmt.Errorf("ent: unknown mutation type %T", m)
 	}
@@ -611,12 +621,145 @@ func (c *UserClient) mutate(ctx context.Context, m *UserMutation) (Value, error)
 	}
 }
 
+// WiseSayingClient is a client for the WiseSaying schema.
+type WiseSayingClient struct {
+	config
+}
+
+// NewWiseSayingClient returns a client for the WiseSaying from the given config.
+func NewWiseSayingClient(c config) *WiseSayingClient {
+	return &WiseSayingClient{config: c}
+}
+
+// Use adds a list of mutation hooks to the hooks stack.
+// A call to `Use(f, g, h)` equals to `wisesaying.Hooks(f(g(h())))`.
+func (c *WiseSayingClient) Use(hooks ...Hook) {
+	c.hooks.WiseSaying = append(c.hooks.WiseSaying, hooks...)
+}
+
+// Intercept adds a list of query interceptors to the interceptors stack.
+// A call to `Intercept(f, g, h)` equals to `wisesaying.Intercept(f(g(h())))`.
+func (c *WiseSayingClient) Intercept(interceptors ...Interceptor) {
+	c.inters.WiseSaying = append(c.inters.WiseSaying, interceptors...)
+}
+
+// Create returns a builder for creating a WiseSaying entity.
+func (c *WiseSayingClient) Create() *WiseSayingCreate {
+	mutation := newWiseSayingMutation(c.config, OpCreate)
+	return &WiseSayingCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// CreateBulk returns a builder for creating a bulk of WiseSaying entities.
+func (c *WiseSayingClient) CreateBulk(builders ...*WiseSayingCreate) *WiseSayingCreateBulk {
+	return &WiseSayingCreateBulk{config: c.config, builders: builders}
+}
+
+// MapCreateBulk creates a bulk creation builder from the given slice. For each item in the slice, the function creates
+// a builder and applies setFunc on it.
+func (c *WiseSayingClient) MapCreateBulk(slice any, setFunc func(*WiseSayingCreate, int)) *WiseSayingCreateBulk {
+	rv := reflect.ValueOf(slice)
+	if rv.Kind() != reflect.Slice {
+		return &WiseSayingCreateBulk{err: fmt.Errorf("calling to WiseSayingClient.MapCreateBulk with wrong type %T, need slice", slice)}
+	}
+	builders := make([]*WiseSayingCreate, rv.Len())
+	for i := 0; i < rv.Len(); i++ {
+		builders[i] = c.Create()
+		setFunc(builders[i], i)
+	}
+	return &WiseSayingCreateBulk{config: c.config, builders: builders}
+}
+
+// Update returns an update builder for WiseSaying.
+func (c *WiseSayingClient) Update() *WiseSayingUpdate {
+	mutation := newWiseSayingMutation(c.config, OpUpdate)
+	return &WiseSayingUpdate{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOne returns an update builder for the given entity.
+func (c *WiseSayingClient) UpdateOne(ws *WiseSaying) *WiseSayingUpdateOne {
+	mutation := newWiseSayingMutation(c.config, OpUpdateOne, withWiseSaying(ws))
+	return &WiseSayingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// UpdateOneID returns an update builder for the given id.
+func (c *WiseSayingClient) UpdateOneID(id int) *WiseSayingUpdateOne {
+	mutation := newWiseSayingMutation(c.config, OpUpdateOne, withWiseSayingID(id))
+	return &WiseSayingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// Delete returns a delete builder for WiseSaying.
+func (c *WiseSayingClient) Delete() *WiseSayingDelete {
+	mutation := newWiseSayingMutation(c.config, OpDelete)
+	return &WiseSayingDelete{config: c.config, hooks: c.Hooks(), mutation: mutation}
+}
+
+// DeleteOne returns a builder for deleting the given entity.
+func (c *WiseSayingClient) DeleteOne(ws *WiseSaying) *WiseSayingDeleteOne {
+	return c.DeleteOneID(ws.ID)
+}
+
+// DeleteOneID returns a builder for deleting the given entity by its id.
+func (c *WiseSayingClient) DeleteOneID(id int) *WiseSayingDeleteOne {
+	builder := c.Delete().Where(wisesaying.ID(id))
+	builder.mutation.id = &id
+	builder.mutation.op = OpDeleteOne
+	return &WiseSayingDeleteOne{builder}
+}
+
+// Query returns a query builder for WiseSaying.
+func (c *WiseSayingClient) Query() *WiseSayingQuery {
+	return &WiseSayingQuery{
+		config: c.config,
+		ctx:    &QueryContext{Type: TypeWiseSaying},
+		inters: c.Interceptors(),
+	}
+}
+
+// Get returns a WiseSaying entity by its id.
+func (c *WiseSayingClient) Get(ctx context.Context, id int) (*WiseSaying, error) {
+	return c.Query().Where(wisesaying.ID(id)).Only(ctx)
+}
+
+// GetX is like Get, but panics if an error occurs.
+func (c *WiseSayingClient) GetX(ctx context.Context, id int) *WiseSaying {
+	obj, err := c.Get(ctx, id)
+	if err != nil {
+		panic(err)
+	}
+	return obj
+}
+
+// Hooks returns the client hooks.
+func (c *WiseSayingClient) Hooks() []Hook {
+	return c.hooks.WiseSaying
+}
+
+// Interceptors returns the client interceptors.
+func (c *WiseSayingClient) Interceptors() []Interceptor {
+	return c.inters.WiseSaying
+}
+
+func (c *WiseSayingClient) mutate(ctx context.Context, m *WiseSayingMutation) (Value, error) {
+	switch m.Op() {
+	case OpCreate:
+		return (&WiseSayingCreate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdate:
+		return (&WiseSayingUpdate{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpUpdateOne:
+		return (&WiseSayingUpdateOne{config: c.config, hooks: c.Hooks(), mutation: m}).Save(ctx)
+	case OpDelete, OpDeleteOne:
+		return (&WiseSayingDelete{config: c.config, hooks: c.Hooks(), mutation: m}).Exec(ctx)
+	default:
+		return nil, fmt.Errorf("ent: unknown WiseSaying mutation op: %q", m.Op())
+	}
+}
+
 // hooks and interceptors per client, for fast access.
 type (
 	hooks struct {
-		Event, Heart, User []ent.Hook
+		Event, Heart, User, WiseSaying []ent.Hook
 	}
 	inters struct {
-		Event, Heart, User []ent.Interceptor
+		Event, Heart, User, WiseSaying []ent.Interceptor
 	}
 )

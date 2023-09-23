@@ -51,11 +51,26 @@ var (
 		Columns:    UsersColumns,
 		PrimaryKey: []*schema.Column{UsersColumns[0]},
 	}
+	// WiseSayingsColumns holds the columns for the "wise_sayings" table.
+	WiseSayingsColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "wise_saying", Type: field.TypeString},
+		{Name: "created_by", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
+		{Name: "updated_at", Type: field.TypeTime},
+	}
+	// WiseSayingsTable holds the schema information for the "wise_sayings" table.
+	WiseSayingsTable = &schema.Table{
+		Name:       "wise_sayings",
+		Columns:    WiseSayingsColumns,
+		PrimaryKey: []*schema.Column{WiseSayingsColumns[0]},
+	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
 		EventsTable,
 		HeartsTable,
 		UsersTable,
+		WiseSayingsTable,
 	}
 )
 

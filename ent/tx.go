@@ -18,6 +18,8 @@ type Tx struct {
 	Heart *HeartClient
 	// User is the client for interacting with the User builders.
 	User *UserClient
+	// WiseSaying is the client for interacting with the WiseSaying builders.
+	WiseSaying *WiseSayingClient
 
 	// lazily loaded.
 	client     *Client
@@ -152,6 +154,7 @@ func (tx *Tx) init() {
 	tx.Event = NewEventClient(tx.config)
 	tx.Heart = NewHeartClient(tx.config)
 	tx.User = NewUserClient(tx.config)
+	tx.WiseSaying = NewWiseSayingClient(tx.config)
 }
 
 // txDriver wraps the given dialect.Tx with a nop dialect.Driver implementation.
