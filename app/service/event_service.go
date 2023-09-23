@@ -29,7 +29,7 @@ func (s eventServiceImpl) CreateEvent(ctx context.Context, req *eventDto.Event) 
 		return nil, custom.NotFound
 	}
 
-	userRes, err := s.userRepository.GetUserByUserNickName(ctx, &userReq)
+	userRes, err := s.userRepository.FindByNickname(ctx, &userReq)
 	if err != nil {
 		return nil, custom.NotFound
 	}

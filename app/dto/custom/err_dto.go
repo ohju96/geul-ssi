@@ -21,8 +21,10 @@ var (
 	UUIDGenerateFail    = NewError(http.StatusInternalServerError, 2004, "uuid generate fail")
 
 	// 3000 ~ 3999 : user
-	SamePassword = NewError(http.StatusUnauthorized, 3003, "same password")
-	AlreadyExist = NewError(http.StatusConflict, 3004, "already exist")
+	SamePassword   = NewError(http.StatusUnauthorized, 3003, "same password")
+	AlreadyExist   = NewError(http.StatusConflict, 3004, "already exist")
+	Unauthorized   = NewError(http.StatusUnauthorized, 3005, "unauthorized")
+	PasswdNotMatch = NewError(http.StatusUnauthorized, 3006, "password not match")
 )
 
 type Error struct {
