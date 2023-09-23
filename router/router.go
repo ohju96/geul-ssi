@@ -8,4 +8,5 @@ import (
 func MainRouter(g *gin.Engine, toml *config.Config) {
 	InitUserRouter(g, toml)
 	InitSwagRouter(g)
+	InitEventRouter(g, toml)
 }
