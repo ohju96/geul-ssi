@@ -247,9 +247,6 @@ const docTemplate = `{
                 "password": {
                     "type": "string"
                 },
-                "time": {
-                    "type": "string"
-                },
                 "user": {
                     "type": "string"
                 }

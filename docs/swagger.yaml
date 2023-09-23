@@ -41,8 +41,6 @@ definitions:
         type: string
       password:
         type: string
-      time:
-        type: string
       user:
         type: string
     type: object

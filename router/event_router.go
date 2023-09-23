@@ -22,6 +22,7 @@ func eventDependency() controller.EventController {
 	return controller.NewEventController(
 		service.NewEventService(
 			repository.NewEventRepository(*db.MySQL),
+			repository.NewUserRepository(*db.MySQL),
 		),
 	)
 }
