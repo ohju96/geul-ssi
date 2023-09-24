@@ -234,6 +234,41 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/wise-sayings/events": {
+            "get": {
+                "description": "명언을 가져옵니다.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "WiseSayings"
+                ],
+                "summary": "명언 가져오기",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/custom.Fail400GetResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/custom.Fail500GetResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

@@ -255,4 +255,27 @@ paths:
       summary: 명언 추가
       tags:
       - WiseSayings
+  /wise-sayings/events:
+    get:
+      consumes:
+      - application/json
+      description: 명언을 가져옵니다.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/custom.Fail400GetResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/custom.Fail500GetResponse'
+      summary: 명언 가져오기
+      tags:
+      - WiseSayings
 swagger: "2.0"

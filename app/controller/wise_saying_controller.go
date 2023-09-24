@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	wiseSayingDto "geulSsi/app/dto/wisesaying"
 	"geulSsi/app/service"
 	"geulSsi/validator"
@@ -50,6 +51,16 @@ func (c wiseSayingController) AddWiseSaying(g *gin.Context) {
 
 }
 
+// PushWiseSaying godoc
+// @Summary 명언 가져오기
+// @Description 명언을 가져옵니다.
+// @Tags WiseSayings
+// @Accept json
+// @Produce json
+// @Success 200 {object} string
+// @Failure 400 {object} custom.Fail400GetResponse
+// @Failure 500 {object} custom.Fail500GetResponse
+// @Router /wise-sayings/events [get]
 func (c wiseSayingController) PushWiseSaying(g *gin.Context) {
 
 	g.Header("Content-Type", "text/event-stream")
@@ -57,8 +68,13 @@ func (c wiseSayingController) PushWiseSaying(g *gin.Context) {
 	g.Header("Connection", "keep-alive")
 
 	for {
-		message := "현재 시간 : " + time.Now().Format("2006-01-02 15:04:05")
-		g.SSEvent("message", message)
+		wiseSayingMsg, err := c.wiseSayingService.GetWiseSayingChannel()
+		if err != nil {
+			g.JSON(err.StatusCode, err)
+			return
+		}
+		fmt.Println("wiseSayingMsg: ", *wiseSayingMsg)
+		g.SSEvent("message", *wiseSayingMsg)
 		g.Writer.Flush()
 		time.Sleep(3 * time.Second)
 	}

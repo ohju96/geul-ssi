@@ -1,6 +1,7 @@
 package main
 
 import (
+	"geulSsi/app/cron"
 	"geulSsi/config"
 	"geulSsi/config/db"
 	"geulSsi/config/swagger"
@@ -18,14 +19,21 @@ func main() {
 }
 
 func Init(app *gin.Engine) {
-	// toml
+
+	// 설정파일
 	toml := config.InitToml("./config/config.toml")
 
-	// db
+	// 데이터베이스
 	db.InitMySQL(&toml)
+
+	// 라우터 및 검증
 	router.MainRouter(app, &toml)
 	validator.InitValidate()
 
+	// 크론
+	cron.WiseSayingCron()
+
+	// 스웨거
 	swagger.InitSwagger()
 
 }

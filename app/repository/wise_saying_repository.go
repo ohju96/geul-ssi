@@ -7,11 +7,20 @@ import (
 
 type WiseSayingRepository interface {
 	CreateWiseSaying(ctx context.Context, req *ent.WiseSaying, tx *ent.Tx) (*ent.WiseSaying, error) // 명언 추가
-
+	CountAll(ctx context.Context) (int, error)
+	FindAllWiseSaying(ctx context.Context) ([]string, error)
 }
 
 type wiseSayingRepository struct {
 	*ent.Client
+}
+
+func (r wiseSayingRepository) FindAllWiseSaying(ctx context.Context) ([]string, error) {
+	return r.WiseSaying.Query().Select("wise_saying").Strings(ctx)
+}
+
+func (r wiseSayingRepository) CountAll(ctx context.Context) (int, error) {
+	return r.WiseSaying.Query().Count(ctx)
 }
 
 func (r wiseSayingRepository) CreateWiseSaying(ctx context.Context, req *ent.WiseSaying, tx *ent.Tx) (*ent.WiseSaying, error) {
