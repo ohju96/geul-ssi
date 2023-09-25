@@ -1,3 +1,4 @@
 # setting file
 ./config/config.toml
 *.toml
+*.idea

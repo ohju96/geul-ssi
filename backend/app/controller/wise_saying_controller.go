@@ -1,11 +1,11 @@
 package controller
 
 import (
-	"fmt"
 	wiseSayingDto "geulSsi/app/dto/wisesaying"
 	"geulSsi/app/service"
 	"geulSsi/validator"
 	"github.com/gin-gonic/gin"
+	"log"
 	"time"
 )
 
@@ -73,10 +73,10 @@ func (c wiseSayingController) PushWiseSaying(g *gin.Context) {
 			g.JSON(err.StatusCode, err)
 			return
 		}
-		fmt.Println("wiseSayingMsg: ", *wiseSayingMsg)
+		log.Println("wiseSayingMsg: ", *wiseSayingMsg)
 		g.SSEvent("message", *wiseSayingMsg)
 		g.Writer.Flush()
-		time.Sleep(3 * time.Second)
+		time.Sleep(1 * time.Hour)
 	}
 }
 
