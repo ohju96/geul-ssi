@@ -7,6 +7,7 @@ import (
 	"geulSsi/ent/heart"
 	"geulSsi/ent/schema"
 	"geulSsi/ent/user"
+	"geulSsi/ent/wisesaying"
 	"time"
 )
 
@@ -48,4 +49,16 @@ func init() {
 	user.DefaultUpdatedAt = userDescUpdatedAt.Default.(func() time.Time)
 	// user.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
 	user.UpdateDefaultUpdatedAt = userDescUpdatedAt.UpdateDefault.(func() time.Time)
+	wisesayingFields := schema.WiseSaying{}.Fields()
+	_ = wisesayingFields
+	// wisesayingDescCreatedAt is the schema descriptor for created_at field.
+	wisesayingDescCreatedAt := wisesayingFields[2].Descriptor()
+	// wisesaying.DefaultCreatedAt holds the default value on creation for the created_at field.
+	wisesaying.DefaultCreatedAt = wisesayingDescCreatedAt.Default.(func() time.Time)
+	// wisesayingDescUpdatedAt is the schema descriptor for updated_at field.
+	wisesayingDescUpdatedAt := wisesayingFields[3].Descriptor()
+	// wisesaying.DefaultUpdatedAt holds the default value on creation for the updated_at field.
+	wisesaying.DefaultUpdatedAt = wisesayingDescUpdatedAt.Default.(func() time.Time)
+	// wisesaying.UpdateDefaultUpdatedAt holds the default value on update for the updated_at field.
+	wisesaying.UpdateDefaultUpdatedAt = wisesayingDescUpdatedAt.UpdateDefault.(func() time.Time)
 }

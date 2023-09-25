@@ -9,6 +9,7 @@ import (
 	"geulSsi/ent/event"
 	"geulSsi/ent/heart"
 	"geulSsi/ent/user"
+	"geulSsi/ent/wisesaying"
 	"reflect"
 	"sync"
 
@@ -75,9 +76,10 @@ var (
 func checkColumn(table, column string) error {
 	initCheck.Do(func() {
 		columnCheck = sql.NewColumnCheck(map[string]func(string) bool{
-			event.Table: event.ValidColumn,
-			heart.Table: heart.ValidColumn,
-			user.Table:  user.ValidColumn,
+			event.Table:      event.ValidColumn,
+			heart.Table:      heart.ValidColumn,
+			user.Table:       user.ValidColumn,
+			wisesaying.Table: wisesaying.ValidColumn,
 		})
 	})
 	return columnCheck(table, column)
