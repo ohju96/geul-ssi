@@ -2,17 +2,19 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"geulSsi/app/dto/custom"
 	wisesayingDto "geulSsi/app/dto/wisesaying"
 	"geulSsi/app/repository"
 	"geulSsi/bcrypt"
 	"geulSsi/ent"
 	"log"
+	"sync"
 )
 
 var (
-	wiseSayingMsg = make(chan string, 10)
+	wiseSayingMsg = make(chan string, 100)
+	msgMutex      sync.Mutex
+	wg            sync.WaitGroup
 )
 
 type WiseSayingService interface {
@@ -29,6 +31,8 @@ type wiseSayingService struct {
 func (s wiseSayingService) GetWiseSayingChannel() (*string, *custom.Error) {
 
 	defaultMsg := "채널에 등록된 명언이 없습니다."
+	msgMutex.Lock()
+	defer msgMutex.Unlock()
 
 	select {
 	case wiseSaying, ok := <-wiseSayingMsg:
@@ -39,6 +43,13 @@ func (s wiseSayingService) GetWiseSayingChannel() (*string, *custom.Error) {
 		if len(wiseSaying) == 0 {
 			return &defaultMsg, nil
 		}
+
+		defaultMsg = wiseSaying
+
+		go func() {
+			wiseSayingMsg <- defaultMsg
+		}()
+
 		return &wiseSaying, nil
 	default:
 		return &defaultMsg, nil
@@ -46,7 +57,9 @@ func (s wiseSayingService) GetWiseSayingChannel() (*string, *custom.Error) {
 }
 
 func (s wiseSayingService) RegisterWiseSayingChannel(ctx context.Context) {
+	wg.Add(1)
 	go func() {
+		defer wg.Done()
 		sayingList, err := s.wiseSayingRepository.FindAllWiseSaying(ctx)
 		if err != nil {
 			log.Println(err)
@@ -54,8 +67,9 @@ func (s wiseSayingService) RegisterWiseSayingChannel(ctx context.Context) {
 		}
 
 		for _, saying := range sayingList {
-			fmt.Println(saying)
+			msgMutex.Lock()
 			wiseSayingMsg <- saying
+			msgMutex.Unlock()
 		}
 	}()
 }
@@ -107,9 +121,14 @@ func (s wiseSayingService) AddWiseSaying(ctx context.Context, addWiseSayingReque
 
 	// 채널에 추가한다.
 	go func() {
-		wiseSayingMsg <- addWiseSayingRequest.WiseSaying
-	}()
+		if len(wiseSayingMsg) >= 3 {
+			<-wiseSayingMsg
+		}
 
+		msgMutex.Lock()
+		wiseSayingMsg <- addWiseSayingRequest.WiseSaying
+		defer msgMutex.Unlock()
+	}()
 	// 리턴
 	return custom.NewSuccess(), nil
 
