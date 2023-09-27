@@ -19,6 +19,7 @@ var (
 	BcryptParsingFail   = NewError(http.StatusInternalServerError, 2002, "bcrypt parsing fail")
 	BcryptMismatch      = NewError(http.StatusUnauthorized, 2003, "bcrypt mismatch")
 	UUIDGenerateFail    = NewError(http.StatusInternalServerError, 2004, "uuid generate fail")
+	ChannelEmpty        = NewError(http.StatusInternalServerError, 2005, "after signup please set message")
 
 	// 3000 ~ 3999 : user
 	SamePassword   = NewError(http.StatusUnauthorized, 3003, "same password")

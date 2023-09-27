@@ -654,7 +654,7 @@ func (m *HeartMutation) EventID() (r int, exists bool) {
 // OldEventID returns the old "event_id" field's value of the Heart entity.
 // If the Heart object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *HeartMutation) OldEventID(ctx context.Context) (v *int, err error) {
+func (m *HeartMutation) OldEventID(ctx context.Context) (v int, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldEventID is only allowed on UpdateOne operations")
 	}
@@ -709,7 +709,7 @@ func (m *HeartMutation) Writer() (r string, exists bool) {
 // OldWriter returns the old "writer" field's value of the Heart entity.
 // If the Heart object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *HeartMutation) OldWriter(ctx context.Context) (v *string, err error) {
+func (m *HeartMutation) OldWriter(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldWriter is only allowed on UpdateOne operations")
 	}

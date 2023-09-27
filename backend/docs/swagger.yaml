@@ -35,13 +35,79 @@ definitions:
         example: 200
         type: integer
     type: object
+  event.CreateHeartReq:
+    properties:
+      eventId:
+        example: 1
+        type: integer
+      nickName:
+        example: nickname
+        type: string
+      passWord:
+        example: password
+        type: string
+    type: object
+  event.CreateHeartResponse:
+    properties:
+      code:
+        example: 1
+        type: integer
+      message:
+        example: success
+        type: string
+      status_code:
+        example: 200
+        type: integer
+    type: object
   event.Event:
     properties:
       content:
         type: string
+      eventId:
+        type: integer
       password:
         type: string
       user:
+        type: string
+    type: object
+  event.GetEventListPayload:
+    properties:
+      eventContents:
+        example: eventContents
+        type: string
+      eventID:
+        example: 1
+        type: integer
+      heartCount:
+        example: 1
+        type: integer
+      nickName:
+        example: nickname
+        type: string
+    type: object
+  event.GetEventListResponse:
+    properties:
+      code:
+        example: 1
+        type: integer
+      message:
+        example: success
+        type: string
+      payload:
+        items:
+          $ref: '#/definitions/event.GetEventListPayload'
+        type: array
+      status_code:
+        example: 200
+        type: integer
+    type: object
+  event.GetEventReq:
+    properties:
+      nickName:
+        example: nickname
+        type: string
+      passWord:
+        example: password
         type: string
     type: object
   user.ChangePasswordRequest:
@@ -140,7 +206,7 @@ paths:
       parameters:
       - description: 이벤트 생성 요청 객체
         in: body
-        name: event
+        name: eventDto.Event
         required: true
         schema:
           $ref: '#/definitions/event.Event'
@@ -160,6 +226,66 @@ paths:
           schema:
             $ref: '#/definitions/custom.Fail500GetResponse'
       summary: 이벤트 생성
+      tags:
+      - Events
+  /events/heart:
+    post:
+      consumes:
+      - application/json
+      description: 이벤트에 좋아요를 누릅니다.
+      parameters:
+      - description: 좋아요 생성 요청 객체
+        in: body
+        name: eventDto.CreateHeartReq
+        required: true
+        schema:
+          $ref: '#/definitions/event.CreateHeartReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/event.CreateHeartResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/custom.Fail400GetResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/custom.Fail500GetResponse'
+      summary: 이벤트에 좋아요를 누릅니다.
+      tags:
+      - Events
+  /events/list:
+    post:
+      consumes:
+      - application/json
+      description: 자신이 생성한 이벤트를 조회합니다.
+      parameters:
+      - description: 이벤트 생성 요청 객체
+        in: body
+        name: eventDto.GetEventReq
+        required: true
+        schema:
+          $ref: '#/definitions/event.GetEventReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/event.GetEventListResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/custom.Fail400GetResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/custom.Fail500GetResponse'
+      summary: 자신이 생성한 이벤트를 조회합니다.
       tags:
       - Events
   /users:

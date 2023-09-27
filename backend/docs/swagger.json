@@ -53,7 +53,7 @@
                 "parameters": [
                     {
                         "description": "이벤트 생성 요청 객체",
-                        "name": "event",
+                        "name": "eventDto.Event",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -66,6 +66,98 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/custom.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/custom.Fail400GetResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/custom.Fail500GetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/events/heart": {
+            "post": {
+                "description": "이벤트에 좋아요를 누릅니다.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "이벤트에 좋아요를 누릅니다.",
+                "parameters": [
+                    {
+                        "description": "좋아요 생성 요청 객체",
+                        "name": "eventDto.CreateHeartReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/event.CreateHeartReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/event.CreateHeartResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/custom.Fail400GetResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/custom.Fail500GetResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/events/list": {
+            "post": {
+                "description": "자신이 생성한 이벤트를 조회합니다.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "자신이 생성한 이벤트를 조회합니다.",
+                "parameters": [
+                    {
+                        "description": "이벤트 생성 요청 객체",
+                        "name": "eventDto.GetEventReq",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/event.GetEventReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/event.GetEventListResponse"
                         }
                     },
                     "400": {
@@ -312,17 +404,111 @@
                 }
             }
         },
+        "event.CreateHeartReq": {
+            "type": "object",
+            "properties": {
+                "eventId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "nickName": {
+                    "type": "string",
+                    "example": "nickname"
+                },
+                "passWord": {
+                    "type": "string",
+                    "example": "password"
+                }
+            }
+        },
+        "event.CreateHeartResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "message": {
+                    "type": "string",
+                    "example": "success"
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        },
         "event.Event": {
             "type": "object",
             "properties": {
                 "content": {
                     "type": "string"
                 },
+                "eventId": {
+                    "type": "integer"
+                },
                 "password": {
                     "type": "string"
                 },
                 "user": {
                     "type": "string"
+                }
+            }
+        },
+        "event.GetEventListPayload": {
+            "type": "object",
+            "properties": {
+                "eventContents": {
+                    "type": "string",
+                    "example": "eventContents"
+                },
+                "eventID": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "heartCount": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "nickName": {
+                    "type": "string",
+                    "example": "nickname"
+                }
+            }
+        },
+        "event.GetEventListResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "message": {
+                    "type": "string",
+                    "example": "success"
+                },
+                "payload": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/event.GetEventListPayload"
+                    }
+                },
+                "status_code": {
+                    "type": "integer",
+                    "example": 200
+                }
+            }
+        },
+        "event.GetEventReq": {
+            "type": "object",
+            "properties": {
+                "nickName": {
+                    "type": "string",
+                    "example": "nickname"
+                },
+                "passWord": {
+                    "type": "string",
+                    "example": "password"
                 }
             }
         },
