@@ -18,9 +18,9 @@ type Heart struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// EventID holds the value of the "event_id" field.
-	EventID *int `json:"event_id,omitempty"`
+	EventID int `json:"event_id,omitempty"`
 	// Writer holds the value of the "writer" field.
-	Writer *string `json:"writer,omitempty"`
+	Writer string `json:"writer,omitempty"`
 	// IsHeart holds the value of the "is_heart" field.
 	IsHeart bool `json:"is_heart,omitempty"`
 	// CreatedAt holds the value of the "created_at" field.
@@ -66,15 +66,13 @@ func (h *Heart) assignValues(columns []string, values []any) error {
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field event_id", values[i])
 			} else if value.Valid {
-				h.EventID = new(int)
-				*h.EventID = int(value.Int64)
+				h.EventID = int(value.Int64)
 			}
 		case heart.FieldWriter:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field writer", values[i])
 			} else if value.Valid {
-				h.Writer = new(string)
-				*h.Writer = value.String
+				h.Writer = value.String
 			}
 		case heart.FieldIsHeart:
 			if value, ok := values[i].(*sql.NullBool); !ok {
@@ -124,15 +122,11 @@ func (h *Heart) String() string {
 	var builder strings.Builder
 	builder.WriteString("Heart(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", h.ID))
-	if v := h.EventID; v != nil {
-		builder.WriteString("event_id=")
-		builder.WriteString(fmt.Sprintf("%v", *v))
-	}
+	builder.WriteString("event_id=")
+	builder.WriteString(fmt.Sprintf("%v", h.EventID))
 	builder.WriteString(", ")
-	if v := h.Writer; v != nil {
-		builder.WriteString("writer=")
-		builder.WriteString(*v)
-	}
+	builder.WriteString("writer=")
+	builder.WriteString(h.Writer)
 	builder.WriteString(", ")
 	builder.WriteString("is_heart=")
 	builder.WriteString(fmt.Sprintf("%v", h.IsHeart))

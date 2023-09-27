@@ -15,10 +15,18 @@ type UserRepository interface {
 	ExistBySecretCodeAndNickname(ctx context.Context, req *ent.User) (bool, error)              // 시크릿코드와 닉네임으로 존재여부
 	UpdatePasswordByNicknameAndSecretCode(ctx context.Context, req *ent.User, tx *ent.Tx) error // 시크릿코드와 닉네임으로 비밀번호 변경
 	FindByNickname(ctx context.Context, req *ent.User) (*ent.User, error)                       // 닉네임으로 유저 조회
+	FindByNickNameAndPassword(ctx context.Context, req *ent.User) (*ent.User, error)            // 닉네임과 비밀번호로 유저 조회
 }
 
 type userRepositoryImpl struct {
 	ent.Client
+}
+
+func (r userRepositoryImpl) FindByNickNameAndPassword(ctx context.Context, req *ent.User) (*ent.User, error) {
+	return r.User.Query().
+		Where(user.NicknameEQ(req.Nickname),
+			user.PasswordEQ(req.Password)).
+		Only(ctx)
 }
 
 func (r userRepositoryImpl) FindByNickname(ctx context.Context, req *ent.User) (*ent.User, error) {

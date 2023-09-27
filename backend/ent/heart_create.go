@@ -147,11 +147,11 @@ func (hc *HeartCreate) createSpec() (*Heart, *sqlgraph.CreateSpec) {
 	)
 	if value, ok := hc.mutation.EventID(); ok {
 		_spec.SetField(heart.FieldEventID, field.TypeInt, value)
-		_node.EventID = &value
+		_node.EventID = value
 	}
 	if value, ok := hc.mutation.Writer(); ok {
 		_spec.SetField(heart.FieldWriter, field.TypeString, value)
-		_node.Writer = &value
+		_node.Writer = value
 	}
 	if value, ok := hc.mutation.IsHeart(); ok {
 		_spec.SetField(heart.FieldIsHeart, field.TypeBool, value)
