@@ -14,8 +14,8 @@ type Heart struct {
 // Fields of the Heart.
 func (Heart) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("event_id").Nillable().Unique(),
-		field.String("writer").Nillable(),
+		field.Int("event_id").Unique(),
+		field.String("writer"),
 		field.Bool("is_heart").Default(false),
 		field.Time("created_at").Default(time.Now),
 	}
