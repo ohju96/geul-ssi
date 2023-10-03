@@ -1,7 +1,7 @@
 package main
 
 import (
-	"geulSsi/app/cron"
+	"geulSsi/app/starter"
 	"geulSsi/config"
 	"geulSsi/config/db"
 	"geulSsi/config/swagger"
@@ -30,8 +30,8 @@ func Init(app *gin.Engine) {
 	router.MainRouter(app, &toml)
 	validator.InitValidate()
 
-	// 크론
-	cron.WiseSayingCron()
+	// 채널 스타터
+	starter.WiseSayingStarter()
 
 	// 스웨거
 	swagger.InitSwagger()

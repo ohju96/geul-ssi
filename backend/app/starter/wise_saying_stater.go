@@ -1,4 +1,4 @@
-package cron
+package starter
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"geulSsi/config/db"
 )
 
-func WiseSayingCron() {
+func WiseSayingStarter() {
 	ctx := context.TODO()
 	wiseSayingService := wiseSayingServiceDI()
 	wiseSayingService.RegisterWiseSayingChannel(ctx)
