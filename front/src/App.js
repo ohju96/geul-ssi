@@ -1,10 +1,11 @@
-function App() {
+import Main from "./pages/Main";
+
+const App = () => {
   return (
     <div className="App">
-      <h2 className="font-dos">Hello, React!</h2>
-      <h2 className="font-ram">Hello, React!</h2>
+      <Main />
     </div>
   );
-}
+};
 
 export default App;

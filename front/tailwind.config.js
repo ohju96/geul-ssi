@@ -4,8 +4,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        dos: ["DOSPilgiMedium"],
-        ram: ["Ramche"],
+        jamsil: ["Jamsil"],
       },
     },
   },
